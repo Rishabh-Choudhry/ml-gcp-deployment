@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "ml-gcp-deployment"
+version = "0.1.0"
+description = ""
+authors = ["Rishabh Choudhary"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^2.1.2"
+pandas = "^2.2.3"
+scikit-learn = "^1.5.2"
+flask = "^3.0.3"
+xgboost = "^2.1.2"
+pytest = "^8.3.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
