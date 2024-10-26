@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xgboost-model-deployment
+  labels:
+    app: xgboost-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xgboost-model
+  template:
+    metadata:
+      labels:
+        app: xgboost-model
+    spec:
+      containers:
+        - name: xgboost-model
+          image: image-placeholder
+          ports:
+            - containerPort: 5000
+      imagePullSecrets:
+        - name: gcr-json-key

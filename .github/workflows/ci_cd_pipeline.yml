@@ -41,7 +41,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: us-central1-docker.pkg.dev/sixth-hash-439504-e3/xgboost-model/xgboost-model:${{github.run_id}}-${{github.run_number}}
+          tags: |
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/xgboost-model/xgboost-model:${{github.run_id}}-${{github.run_number}}
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/xgboost-model/xgboost-model:latest
 
       - name: "Set up GKE credentials"
         uses: "google-github-actions/get-gke-credentials@v2.2.1"
@@ -53,11 +55,21 @@ jobs:
         run: |-
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
+        working-directory: ./k8s
 
         # Deploy the Docker image to the GKE cluster
       - name: Deploy
+
+        env:
+          DEPLOYMENT_NAME: xgboost-model-deployment
+          IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/xgboost-model/xgboost-model
+          NEW_TAG: ${{ github.run_id }}-${{ github.run_number }}
         run: |-
-          ./kustomize edit set image us-central1-docker.pkg.dev/sixth-hash-439504-e3/xgboost-model/xgboost-model:${{github.run_id}}-${{github.run_number}}
+          ./kustomize edit set image image-placeholder=$IMAGE_NAME:$NEW_TAG
+
           ./kustomize build . | kubectl apply -f -
+
           kubectl rollout status deployment/$DEPLOYMENT_NAME
+
           kubectl get services -o wide
+        working-directory: ./k8s
