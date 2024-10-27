@@ -42,8 +42,8 @@ jobs:
           context: .
           push: true
           tags: |
-            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/xgboost-model/xgboost-model:${{github.run_id}}-${{github.run_number}}
-            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/xgboost-model/xgboost-model:latest
+            ${{vars.GCP_DOCKER_PACKAGE}}/${{ secrets.GCP_PROJECT_ID }}/${{vars.GCP_DOCKER_IMAGE}}/${{vars.GCP_DOCKER_IMAGE}}:${{github.run_id}}-${{github.run_number}}
+            ${{vars.GCP_DOCKER_PACKAGE}}/${{ secrets.GCP_PROJECT_ID }}/${{vars.GCP_DOCKER_IMAGE}}/${{vars.GCP_DOCKER_IMAGE}}:latest
 
       - name: "Set up GKE credentials"
         uses: "google-github-actions/get-gke-credentials@v2.2.1"
@@ -62,7 +62,7 @@ jobs:
 
         env:
           DEPLOYMENT_NAME: xgboost-model-deployment
-          IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/xgboost-model/xgboost-model
+          IMAGE_NAME: ${{vars.GCP_DOCKER_PACKAGE}}/${{ secrets.GCP_PROJECT_ID }}/${{vars.GCP_DOCKER_IMAGE}}/${{vars.GCP_DOCKER_IMAGE}}
           NEW_TAG: ${{ github.run_id }}-${{ github.run_number }}
         run: |-
           ./kustomize edit set image image-placeholder=$IMAGE_NAME:$NEW_TAG

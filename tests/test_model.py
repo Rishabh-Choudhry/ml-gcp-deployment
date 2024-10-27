@@ -9,6 +9,7 @@ class TestPerformance:
 
     def test_model_performance(self):
 
+        # load data and target
         data   = pd.read_csv('tests/dataset/data.csv')
         labels = pd.read_csv('tests/dataset/target.csv')
 
